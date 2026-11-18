@@ -3,22 +3,24 @@ function EnsayoRobot(DOMAIN_ID)
 clc
 
 % Señal de referencia velocidad
-upper_value = 0.15;
+upper_value = 0.1;
 lower_value = 0.1;
 period = 10.0;      % en tiempo
 phase_delay = 5.0;  % en tiempo
 duty_cycle = 50.0;  % en % del periodo
+
 % Señal de referencia distancia a pared
-upper_value_dn = 0.2;
+upper_value_dn = 0.22;
 lower_value_dn = 0.2;
-period_dn = 10.0;      % en tiempo
-phase_delay_dn = 0.0;  % en tiempo
+period_dn = 60.0;      % en tiempo
+phase_delay_dn = 10.0;  % en tiempo
 duty_cycle_dn = 50.0;  % en % del periodo
+
 % Configuración general del ensayo
-test_duration = 20.0;
+test_duration = 70.0;
 publish_rate = 50.0;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % % REFERENCIAS PARA LA COMPETICIÓN FINAL %%%%%%%%%%
 % % Señal de referencia velocidad
 % upper_value = 0.1;
@@ -37,13 +39,13 @@ publish_rate = 50.0;
 % % Configuración general del ensayo
 % test_duration = 55.0;
 % publish_rate = 50.0;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Definir aquí los parámetros del control de velocidad. 
 %¡Muy importante poner los decimales en todos!
 
 K = 190;
-Ti =0.054;
+Ti = 0.054;
 Td = 0.012;   % Td=0.0 si no se usa acción diferencial
 b = 1.0;    % b=1.0 si no se usa ponderación de la referencia
 N = 3.0;
@@ -54,7 +56,7 @@ K= K/30.3;  % Conversión de rad/s a m/s
 %¡Muy importante poner los decimales en todos!
 
 %Control interno
-Kinterno = 100.0;   % <0 si avance con ruedas delante
+Kinterno = 100;   % <0 si avance con ruedas delante
 Tiinterno = inf;    % Ti=inf si no se usa acción integral
 Tdinterno = 0.0;    % Td=0.0 si no se usa acción diferencial
 binterno = 1.0;     % b=1.0 si no se usa ponderación de la referencia
@@ -62,10 +64,10 @@ Ninterno = 8.0;
 DSinterno = 1.0;    % DS=1 diferencial a la salida / DS=0 diferencial al error
 
 % Control externo
-Kexterno = 20;    % avance con ruedas delante
-Tiexterno = 2.0;    %Ti=inf si no se usa acción integral
+Kexterno = 20.0;    % avance con ruedas delante
+Tiexterno = inf;    %Ti=inf si no se usa acción integral
 Tdexterno = 0.0;    % Td=0.0 si no se usa acción diferencial
-bexterno = 0.9;     % b=1.0 si no se usa ponderación de la referencia
+bexterno = 1;     % b=1.0 si no se usa ponderación de la referencia
 Nexterno = 8.0;
 DSexterno = 1.0;    % DS=1 diferencial a la salida / DS=0 diferencial al error
 
@@ -78,10 +80,11 @@ ip = char("192.168.0." + string(DOMAIN_ID));
 % Buscar si empieza en el valor bajo o alto
 double integral_ini;
 if (1.0 - phase_delay_dn / period_dn) > (duty_cycle_dn / 100.0)
-    integral_ini = (1-bexterno) * lower_value_dn;
+    integral_ini = (1-bexterno) * lower_value_dn * Kexterno;
 else
-    integral_ini = (1-bexterno) * upper_value_dn;
+    integral_ini = (1-bexterno) * upper_value_dn * Kexterno;
 end
+
 
 % [no_error, device] = ConexionControlInterno(ip, DOMAIN_ID);
 % if(no_error == 0)
@@ -128,13 +131,13 @@ set(paramObjWF, "pid_angle.Td", double(Tdinterno));
 set(paramObjWF, "pid_angle.b", double(binterno));
 set(paramObjWF, "pid_angle.N", double(Ninterno));
 set(paramObjWF, "pid_angle.td_to_error", not(boolean(DSinterno)));
-set(paramObjWF, "pid_angle.initial_integral", double(integral_ini))
 set(paramObjWF, "pid_distance.Kp", double(Kexterno));
 set(paramObjWF, "pid_distance.Ti", double(Tiexterno));
 set(paramObjWF, "pid_distance.Td", double(Tdexterno));
 set(paramObjWF, "pid_distance.b", double(bexterno));
 set(paramObjWF, "pid_distance.N", double(Nexterno));
 set(paramObjWF, "pid_distance.td_to_error", not(boolean(DSexterno)));
+set(paramObjWF, "pid_distance.initial_integral", double(integral_ini));
 set(paramObjVel, "pid.Kp", double(K));
 set(paramObjVel, "pid.Ti", double(Ti));
 set(paramObjVel, "pid.Td", double(Td));
