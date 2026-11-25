@@ -3,8 +3,8 @@ function EnsayoRobot(DOMAIN_ID)
 clc
 
 % Señal de referencia velocidad
-upper_value = 0.1;
-lower_value = 0.1;
+upper_value = 0.15;
+lower_value = 0.15;
 period = 10.0;      % en tiempo
 phase_delay = 5.0;  % en tiempo
 duty_cycle = 50.0;  % en % del periodo
@@ -64,10 +64,10 @@ Ninterno = 8.0;
 DSinterno = 1.0;    % DS=1 diferencial a la salida / DS=0 diferencial al error
 
 % Control externo
-Kexterno = 20.0;    % avance con ruedas delante
-Tiexterno = inf;    %Ti=inf si no se usa acción integral
+Kexterno = 18.0;    % avance con ruedas delante
+Tiexterno = 5;    %Ti=inf si no se usa acción integral
 Tdexterno = 0.0;    % Td=0.0 si no se usa acción diferencial
-bexterno = 1;     % b=1.0 si no se usa ponderación de la referencia
+bexterno = 0.75;     % b=1.0 si no se usa ponderación de la referencia
 Nexterno = 8.0;
 DSexterno = 1.0;    % DS=1 diferencial a la salida / DS=0 diferencial al error
 

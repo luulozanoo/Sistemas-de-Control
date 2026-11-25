@@ -19,7 +19,7 @@ D=1.5772e-01;
 
 % Modelo planta externa P2(s)
 
-Ref_Vo=0.1
+Ref_Vo=0.16
 Vo=Ref_Vo; 
   
 % Duración de la simulación
@@ -54,10 +54,10 @@ Kint=80;
 
 %% Control del lazo externo
 
-Kext=25;
-Ti=inf;
+Kext=18;
+Ti=5;
 Td=0.0;
-b=1;   
+b=0.75;   
 N=8;
 
 
